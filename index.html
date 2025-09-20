@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lumera Balance Checker</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    input, button { padding: 10px; margin: 5px; font-size: 16px; }
+    .result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>💎 Lumera Balance Checker (Testnet)</h1>
+  <input type="text" id="address" placeholder="Enter Lumera Testnet Address" size="50"/>
+  <br/>
+  <button onclick="checkBalance()">Check Balance</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    async function checkBalance() {
+      const addr = document.getElementById("address").value;
+      if (!addr) {
+        document.getElementById("result").innerText = "⚠️ Please enter an address.";
+        return;
+      }
+
+      try {
+        // Example Lumera Testnet RPC (replace with official if different)
+        const response = await fetch(`https://rpc.testnet.lumera.xyz/bank/balances/${addr}`);
+        const data = await response.json();
+
+        if (data.balances && data.balances.length > 0) {
+          document.getElementById("result").innerText =
+            `Balance: ${data.balances[0].amount} ${data.balances[0].denom}`;
+        } else {
+          document.getElementById("result").innerText = "No balance found.";
+        }
+      } catch (err) {
+        document.getElementById("result").innerText = "❌ Error fetching balance.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
